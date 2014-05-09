@@ -1,0 +1,51 @@
+%html
+	%head
+		%meta{:charset=>"utf-8"}
+		%title RMap Demo
+		%link{:rel=>"stylesheet", :type=>"text/css", :href=>"/stylesheets/base.css"}
+		%link{:rel=>"stylesheet", :type=>"text/css", :href=>"/stylesheets/skeleton.css"}
+		%link{:rel=>"stylesheet", :type=>"text/css", :href=>"/stylesheets/layout.css"}
+		<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+	%body
+		
+		%div{:class => "container"}
+			
+			%div{:id => 'header',:class => "sixteen columns" }
+				%a{:class => 'button' , :href =>'/new'} New
+				
+			%div{:style =>"border-top:thin solid #ccc; height:300px;", :id => 'map-canvas',:class => "sixteen columns" }
+			- @posts.each do |i|
+				%div{:id => i.id, :class => "sixteen columns item"}
+					%div{:class => "inner"}
+						%a{:href =>"/posts/#{i.id}"} 
+							%h3= i.title
+						%h5= i.address
+						%time Submitted #{i.created_at} 
+%script
+	function initialize() {
+	- @posts.each do |i|
+		var pos#{i.id} = new google.maps.LatLng(#{i.lat},#{i.lng});
+
+	
+
+
+	var myLatlng = new google.maps.LatLng(44.5063869,-72.84594800000002);
+	var mapOptions = {
+	zoom: 8,
+	center: myLatlng,
+	mapTypeId: google.maps.MapTypeId.ROADMAP
+	}
+	google.maps.visualRefresh = true;
+	var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+	- @posts.each do |i|
+		var marker#{i.id} = new google.maps.Marker({
+		position: pos#{i.id},
+		map: map,
+		title: '#{i.title}'
+		});
+		
+
+	}
+	google.maps.event.addDomListener(window, 'load', initialize);
+
+
